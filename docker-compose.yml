@@ -1,0 +1,33 @@
+version: '2'
+services:
+    leanote:
+        container_name: leanote_app
+        image: tuzkimo/leanote
+        ports:
+            - "9000:9000"
+        volumes:
+            - ./app.conf:/leanote/conf/app.conf
+            - ./upload:/leanote/public/upload
+            - ./files:/leanote/files
+            - /etc/localtime:/etc/localtime:ro
+        links:
+            - mongo
+        restart: always
+
+    mongo:
+        container_name: leanote_db
+        image: mongo
+        volumes:
+            - ./data:/data/db
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+
+    initdb:
+        container_name: leanote_init
+        image: mongo
+        volumes:
+            - ./initdb.sh:/initdb.sh
+            - ./mongodb_backup:/mongodb_backup
+        links:
+            - mongo
+        command: sh /initdb.sh
