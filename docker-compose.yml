@@ -1,10 +1,19 @@
 version: '2'
 services:
+    nginx:
+        container_name: leanote_container
+        image: nginx
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx_conf:/etc/nginx
+        links:
+            - leanote
+        restart: always
+
     leanote:
         container_name: leanote_app
         image: tuzkimo/leanote
-        ports:
-            - "9000:9000"
         volumes:
             - ./app.conf:/leanote/conf/app.conf
             - ./upload:/leanote/public/upload
